@@ -8,7 +8,6 @@ import numpy as np
 from jinja2 import Environment, FileSystemLoader
 import pdfkit
 
-
 class SalaryDict:
     def __init__(self):
         self.salary_dict = {}

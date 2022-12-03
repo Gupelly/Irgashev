@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from jinja2 import Environment, FileSystemLoader
 import pdfkit
-
+# Hello
 dict_bool = {"False": "Нет", "True": "Да"}
 dict_experience = {"noExperience": "Нет опыта",
                     "between1And3": "От 1 года до 3 лет",
