@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from jinja2 import Environment, FileSystemLoader
 import pdfkit
-
+# Hello
 class SalaryDict:
     def __init__(self):
         self.salary_dict = {}
