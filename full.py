@@ -142,7 +142,7 @@ class Salary:
         salary_to (int): Верхняя граница зарплаты
         salary_gross (str): Указывает, включен ли в зарплату вычет налогов
         salary_currency (str): Указывает на курс валюты
-        average_salary (int): Средняя зарплата
+        average_salary (float): Средняя зарплата
     """
     def __init__(self, data):
         """
@@ -182,7 +182,7 @@ class Vacancy:
         exp (str): Требуемый опыт работы
         premium (str): Наличие премиум вакансии
         employer (str): Название компании
-        salary (str): Зарплата
+        salary (Salary): Зарплата
         area (str): Город
         published_at (str): Дата и время публикации
     """
@@ -208,7 +208,7 @@ class Vacancy:
         Переводит объект Salary в строку, каждый атрибут переводится по собственному правилу
 
         Returns
-            str: Строчная запись объекта Vacancy
+            list: Отформатированные атрибуты объекта Vacancy в виде списка
         """
         cut_text = lambda x: x[:100] + '...' if len(x) > 100 else x
         return [self.name, cut_text(self.descr), cut_text(self.skills), dict_experience[self.exp],
