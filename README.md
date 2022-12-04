@@ -1,4 +1,5 @@
 # Irgashev
-![1](https://user-images.githubusercontent.com/103359810/205508987-3d43f371-4e9b-4f6f-b717-016a9e06b56c.PNG)
-![2](https://user-images.githubusercontent.com/103359810/205508994-05cc64de-fc54-45e1-9d1c-91d31171795a.PNG)
-![3](https://user-images.githubusercontent.com/103359810/205508999-9d33a076-2f87-40c6-a835-94082200696f.PNG)
+![4](https://user-images.githubusercontent.com/103359810/205509100-e0513430-3cbb-46cc-914f-4776f26d61f3.PNG)
+![5](https://user-images.githubusercontent.com/103359810/205509102-c79e01e5-5b84-4ff0-891f-6719d7c00b24.PNG)
+![6](https://user-images.githubusercontent.com/103359810/205509107-51ab380d-3dc3-4ac2-8604-e5dccaf4e174.PNG)
+
