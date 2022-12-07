@@ -10,7 +10,7 @@ import pdfkit
 
 # Hello
 
-""""""
+
 class SalaryDict:
     def __init__(self):
         self.salary_dict = {}
