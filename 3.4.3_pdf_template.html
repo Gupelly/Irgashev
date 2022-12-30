@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Report</title>
+</head>
+<style>
+    body {font-family: Verdana, sans-serif;}
+
+    h1, h2 {text-align: center;}
+
+    img {
+    display: block;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    }
+
+    table {
+    margin-bottom: 20px;
+    border-collapse: collapse;
+    }
+
+    th, td {
+    padding: 5px 15px;
+    text-align: center;
+    border: 1px solid black;
+    }
+
+</style>
+<body>
+    <h1>Аналитика по зарплатам для профессии {{job}} города {{region}}</h1>
+    <img src="file:///C:/Users/user/Irgashev/3.4.3_graph.png">
+    <h2>Статистика по годам</h2>
+    <table>
+        <tr>
+        {% for head in table_big[0] %}
+            <th>{{head}}</th>
+        {% endfor %}
+        </tr>
+        {% for row in table_big[1:] %}
+            <tr>
+                {% for value in row %}
+                    <td>{{value}}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </table>
+    <h2>Статистика по городам</h2>
+    <div>
+        <table style="float: left;">
+            <tr>
+                <th>{{table1[0][0]}}</th>
+                <th>{{table1[0][1]}}</th>
+            </tr>
+            {% for row in table1[1:] %}
+                <tr>
+                    <td>{{row[0]}}</td>
+                    <td>{{row[1]}}</td>
+                </tr>
+            {% endfor %}
+        </table>
+        <table style="float: right;">
+            <tr>
+                <th>{{table2[0][0]}}</th>
+                <th>{{table2[0][1]}}</th>
+            </tr>
+            {% for row in table2[1:] %}
+                <tr>
+                    <td>{{row[0]}}</td>
+                    <td>{{row[1]}}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+</body>
+</html>
