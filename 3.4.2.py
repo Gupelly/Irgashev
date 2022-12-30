@@ -73,28 +73,13 @@ class Statistics:
         count_by_cities = dict(zip(df_top_count_area['area_name'], top_cities))
         return salary_by_cities, count_by_cities
 
-    def print_statistic(self):
-        year_data = self.get_year_statistic()
-        print(f'Динамика уровня зарплат по годам: {year_data[0]}')
-        print(f'Динамика количества вакансий по годам: {year_data[1]}')
-        print(f'Динамика уровня зарплат по годам для выбранной профессии: {year_data[2]}')
-        print(f'Динамика количества вакансий по годам для выбранной профессии: {year_data[3]}')
-        print(f'Уровень зарплат по городам (в порядке убывания): {self.city_statistic[0]}')
-        print(f'Доля вакансий по городам (в порядке убывания): {self.city_statistic[1]}')
-
     def get_excel_data(self):
-        city_data = [['Город', 'Уровень зарплат', '', 'Город', 'Доля вакансий']]
-        city_salary = list(self.city_statistic[0].items())
-        city_count = list(self.city_statistic[1].items())
-        for i in range(len(city_salary)):
-            city_data.append([city_salary[i][0], city_salary[i][1], '', city_count[i][0], city_count[i][1]])
         return [['Год', 'Средняя зарплата', f'Средняя зарплата - {self.job}', 'Количество вакансий',
-                        f'Количество вакансий - {self.job}']] + self.salary_statistic, city_data
+                        f'Количество вакансий - {self.job}']] + self.salary_statistic
 
     def get_png_data(self):
         return [{x[0]: x[1] for x in self.salary_statistic}, {x[0]: x[2] for x in self.salary_statistic}], \
-               [{x[0]: x[3] for x in self.salary_statistic}, {x[0]: x[4] for x in self.salary_statistic}], \
-                self.city_statistic[0], self.city_statistic[1]
+               [{x[0]: x[3] for x in self.salary_statistic}, {x[0]: x[4] for x in self.salary_statistic}]
 
 
 class ReportExcel:
@@ -102,7 +87,7 @@ class ReportExcel:
         self.wb = Workbook()
         self.wb.remove(self.wb['Sheet'])
 
-    def create_sheet(self, title, data, percent=False):
+    def create_sheet(self, title, data):
         ws = self.wb.create_sheet(title)
         for line in data:
             ws.append(line)
@@ -116,9 +101,6 @@ class ReportExcel:
                 if str(cell.value) != '':
                     thin = Side(border_style="thin", color="000000")
                     cell.border = Border(left=thin, top=thin, right=thin, bottom=thin)
-        if percent:
-            for i in range(len(list(ws.rows)) - 1):
-                ws.cell(row=i + 2, column=5).number_format = '0.00%'
 
     def save_wb(self):
         self.wb.save('3.4.2_report.xlsx')
@@ -147,23 +129,6 @@ class ReportPng:
         ax.legend(fontsize=8)
         ax.grid(True, axis='y')
 
-    def add_turned_graph(self, title, city_salary):
-        ax = self.add_empty_graph(title)
-        x_nums = np.arange(len(city_salary.keys()))
-        ax.barh(x_nums, city_salary.values(), self.width * 2)
-        keys = ['\n'.join(x.split()) for x in city_salary.keys()]
-        keys = ['-\n'.join(x.split('-')) for x in keys]
-        ax.set_yticks(x_nums, keys)
-        ax.invert_yaxis()
-        ax.tick_params(axis='x', labelsize=8)
-        ax.tick_params(axis='y', labelsize=6)
-        ax.grid(True, axis='x')
-
-    def add_round_graph(self, title, city_count):
-        ax = self.add_empty_graph(title)
-        city_count = {'Другие': 1 - sum(city_count.values())} | city_count
-        ax.pie(city_count.values(), labels=city_count.keys(), textprops={'fontsize': 6})
-
     @staticmethod
     def print_graph():
         plt.tight_layout()
@@ -174,28 +139,20 @@ class ReportPng:
 data = DataSet('vacancies_by_year.csv')
 job = 'Аналитик'
 statistic = Statistics(job, data.file, data.files_by_years)
-statistic.print_statistic()
 
 wb = ReportExcel()
-salary_list, city_list = statistic.get_excel_data()
+salary_list= statistic.get_excel_data()
 wb.create_sheet('Статистика по годам', salary_list)
-wb.create_sheet('Статистика по городам', city_list, True)
 wb.save_wb()
 
 fig = ReportPng()
-salary_year, salary_count, city_salary, city_count = statistic.get_png_data()
+salary_year, salary_count = statistic.get_png_data()
 fig.add_graph("Уровень зарплат по годам", ['средняя з/п', f'з/п {job}'], salary_year)
 fig.add_graph("Количество вакансий по годам", ['Количество вакансий', f'Количество вакансий {job}'], salary_count)
-fig.add_turned_graph("Уровень зарплат по городам", city_salary)
-fig.add_round_graph("Доля вакансий по городам", city_count)
 fig.print_graph()
 
-table1 = [x[:2] for x in city_list]
-table2 = [x[3:] for x in city_list]
-for row in table2[1:]:
-    row[1] = ("{:.2%}".format(row[1]).replace('.', ','))
 env = Environment(loader=FileSystemLoader('.'))
-template = env.get_template("pdf_template.html")
-pdf_template = template.render({'job': job, 'table_big': salary_list, 'table1': table1, 'table2': table2})
+template = env.get_template("3.4.2_pdf_template.html")
+pdf_template = template.render({'job': job, 'table_big': salary_list})
 config = pdfkit.configuration(wkhtmltopdf=r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe')
 pdfkit.from_string(pdf_template, '3.4.2_report.pdf', configuration=config, options={"enable-local-file-access": None})
