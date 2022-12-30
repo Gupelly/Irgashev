@@ -24,7 +24,6 @@ class DataSet:
     def get_folders(df):
         if df is None:
             return
-        print(df.shape, len(df))
         df['years'] = df['published_at'].apply(lambda x: int(x[:4]))
         years = df['years'].unique()
         files_by_year = {}

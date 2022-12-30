@@ -63,12 +63,14 @@ class CurrencyData:
             for valute in res.findall('./Valute'):
                 if valute.find('./CharCode').text in currency_list:
                     currency_dict[valute.find('./CharCode').text] = round(float(valute.find('./Value').text.replace(',', '.')) \
-                                                                    / int(valute.find('./Nominal').text), 4)
+                                                                    / int(valute.find('./Nominal').text), 7)
                     if all(currency_dict.values()):
                         break
             currency_dict = sorted(currency_dict.items(), key=lambda x: x[0])
             currency = [x[1] for x in currency_dict]
-            currency_df.loc[len(currency_df.index)] = [date] + currency
+            year = date[3:7]
+            month = date[:2]
+            currency_df.loc[len(currency_df.index)] = [year + '-' + month] + currency
         currency_df.to_csv('currency.csv', index=False)
         return currency_df
 
@@ -78,9 +80,9 @@ class NewCsv:
         self.original_df = original_df
         self.currency_df = currency_df
 
-    def create_new_csv(self, range):
+    def create_new_csv(self, length):
         new_df = pd.DataFrame(columns=['name', 'salary', 'area_name', 'published_at'])
-        for i in range:
+        for i in range(length):
             salary = None
             currency = 1
             row = list(self.original_df.loc[i])
@@ -89,7 +91,7 @@ class NewCsv:
                 salary = mean(salary_list)
             if row[3] != 'RUR':
                 if row[3] in list(self.currency_df.columns):
-                    currency = self.currency_df[self.currency_df['date'] == datetime.strptime(row[5], '%Y-%m-%dT%H:%M:%S%z').strftime('%m/%Y')][row[3]].iloc[0]
+                    currency = self.currency_df[self.currency_df['date'] == row[5][:7]][row[3]].iloc[0]
             if salary is not None and currency is not None:
                 salary = round(salary * currency)
             if salary is None or currency is None:
@@ -102,6 +104,6 @@ data = Data('vacancies_dif_currencies.csv')
 currency_data = CurrencyData(data.df)
 currency_csv = currency_data.get_currency_id(list(data.currency_dict.keys()), data.start_date, data.end_date)
 new_csv = NewCsv(data.df, currency_csv)
-new_csv.create_new_csv(range(100))
+new_csv.create_new_csv(100)
 
 

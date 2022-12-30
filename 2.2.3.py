@@ -122,9 +122,13 @@ class Result:
         city_count = list(self.job_count_city.top_proportion_dict.items())
         for i in range(len(city_count)):
             city_list.append([city_salary[i][0], city_salary[i][1], '', city_count[i][0], city_count[i][1]])
+        print(salary_list, city_list)
         return salary_list, city_list
 
     def get_png_data(self):
+        print([self.salary_year.get_average_salary(), self.job_salary_year.get_average_salary()], \
+               [self.count_year.count_dict, self.job_count_year.count_dict], self.job_salary_city.top_salary(self.job_count_city.big_cities),\
+               self.job_count_city.top_proportion_dict)
         return [self.salary_year.get_average_salary(), self.job_salary_year.get_average_salary()], \
                [self.count_year.count_dict, self.job_count_year.count_dict], self.job_salary_city.top_salary(self.job_count_city.big_cities),\
                self.job_count_city.top_proportion_dict
